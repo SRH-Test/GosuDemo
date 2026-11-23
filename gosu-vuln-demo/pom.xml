@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.srh.demo</groupId>
+    <artifactId>gosu-vuln-demo</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Gosu Vulnerable Insurance Portal Demo</name>
+    <description>Intentionally vulnerable Gosu (.gs, .gsx, .gst, .gsp) application for SAST, SCA, and Secret scanning validation.</description>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <gosu.version>1.14.18</gosu.version>
+    </properties>
+
+    <dependencies>
+        <!-- Gosu Core Runtime & API -->
+        <dependency>
+            <groupId>org.gosu-lang.gosu</groupId>
+            <artifactId>gosu-core-api</artifactId>
+            <version>${gosu.version}</version>
+        </dependency>
+
+        <!-- Servlet API for web taint sources -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Intentionally vulnerable dependencies for SCA testing -->
+        <!-- CVE-2021-44228 (Log4Shell), CVE-2021-45046 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+
+        <!-- CVE-2022-42889 (Text4Shell) -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.9</version>
+        </dependency>
+
+        <!-- Multiple critical deserialization CVEs (e.g., CVE-2019-12384, CVE-2019-14540) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.8</version>
+        </dependency>
+
+        <!-- CVE-2022-1471 (Unsafe deserialization RCE) -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.30</version>
+        </dependency>
+
+        <!-- CVE-2015-6420 (Java object deserialization RCE) -->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+
+        <!-- CVE-2022-22965 (Spring4Shell) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>5.3.17</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/main/gosu</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <compilerId>gosu</compilerId>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.gosu-lang.gosu</groupId>
+                        <artifactId>gosu-maven-compiler</artifactId>
+                        <version>${gosu.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
